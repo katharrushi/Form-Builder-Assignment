@@ -6,7 +6,7 @@
 
 yarn install
 
-### Step 2: Install Dependencies
+### Step 2: Start
 
 yarn start
 
