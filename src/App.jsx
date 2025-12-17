@@ -44,31 +44,32 @@ const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#3b82f6",
-      light: "#60a5fa",
-      dark: "#1d4ed8",
+      main: "#1ad7e8ff",
+      light: "#4285f4",
+      dark: "#1557b0",
     },
     secondary: {
-      main: "#8b5cf6",
-      light: "#a78bfa",
-      dark: "#7c3aed",
+      main: "#5f6368",
+      light: "#80868b",
+      dark: "#3c4043",
     },
     background: {
-      default: "#f8fafc",
+      default: "#ffffff",
       paper: "#ffffff",
     },
     grey: {
-      50: "#f8fafc",
-      100: "#f1f5f9",
-      200: "#e2e8f0",
-      300: "#cbd5e1",
-      400: "#94a3b8",
-      500: "#64748b",
-      600: "#475569",
-      700: "#334155",
-      800: "#1e293b",
-      900: "#0f172a",
+      50: "#fafafa",
+      100: "#f5f5f5",
+      200: "#eeeeee",
+      300: "#e0e0e0",
+      400: "#bdbdbd",
+      500: "#9e9e9e",
+      600: "#757575",
+      700: "#616161",
+      800: "#424242",
+      900: "#212121",
     },
+    divider: "#e8eaed",
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -111,7 +112,6 @@ const App = () => {
   const [formData, setFormData] = useState({});
   const [propertiesDrawerOpen, setPropertiesDrawerOpen] = useState(false);
 
-
   const [activeId, setActiveId] = useState(null);
   const [draggedItem, setDraggedItem] = useState(null);
 
@@ -127,7 +127,6 @@ const App = () => {
     useSensor(KeyboardSensor)
   );
 
-
   const buildSchemaFromFields = (fieldsArray, parentKey = null) => {
     const properties = {};
     const required = [];
@@ -135,12 +134,11 @@ const App = () => {
 
     fieldsArray.forEach((field) => {
       if (!field.isLayout) {
-   
         properties[field.key] = {
           ...field.schema,
           title: field.label,
         };
-     
+
         if (field.required) {
           required.push(field.key);
         }
@@ -165,7 +163,6 @@ const App = () => {
         // Merge any nested objects from children
         Object.assign(nestedObjects, childSchema.nestedObjects || {});
       } else if (field.type === "array") {
-       
         if (field.children && field.children.length > 0) {
           // Build schema for array items from children
           const childSchema = buildSchemaFromFields(field.children, null);
@@ -188,7 +185,6 @@ const App = () => {
             }),
           };
         } else {
-         
           properties[field.key] = {
             ...field.schema,
             title: field.label,
@@ -199,11 +195,10 @@ const App = () => {
           required.push(field.key);
         }
       } else {
-
         if (field.children) {
           const childSchema = buildSchemaFromFields(field.children, parentKey);
           Object.assign(properties, childSchema.properties);
-        
+
           if (childSchema.required) {
             required.push(...childSchema.required);
           }
@@ -228,7 +223,6 @@ const App = () => {
               : [],
           };
         } else if (field.type === "array") {
-        
           let nestedDetailElements = [];
           if (field.children && field.children.length > 0) {
             nestedDetailElements = buildUISchemaForArrayItems(field.children);
@@ -249,7 +243,6 @@ const App = () => {
             },
           };
         } else {
-         
           return {
             type: "Control",
             scope: `#/properties/${field.key}`,
@@ -263,13 +256,11 @@ const App = () => {
   const buildUISchemaFromFields = (fieldsArray, parentKey = null) => {
     return fieldsArray
       .filter((field) => {
-    
         return !field.uischema?.options?.hidden;
       })
       .map((field) => {
         if (field.isLayout) {
           if (field.type === "object") {
-      
             return {
               type: "Group",
               label: field.label,
@@ -449,19 +440,17 @@ const App = () => {
     return data;
   };
 
-  
   React.useEffect(() => {
     if (fields.length > 0) {
       const currentData = { ...formData };
       const initializedData = initializeNestedFormData(fields, currentData);
 
-    
       if (JSON.stringify(currentData) !== JSON.stringify(initializedData)) {
         setFormData(initializedData);
       }
     }
   }, [fields]);
- 
+
   const schemaData = buildSchemaFromFields(fields);
   const formState = {
     schema: {
@@ -480,7 +469,6 @@ const App = () => {
   const addField = useCallback((fieldType, parentId, index) => {
     // Create a unique operation ID to prevent duplicates
     const operationId = `${fieldType.id}-${parentId || "root"}-${Date.now()}`;
-
 
     if (pendingOperations.current.has(operationId)) {
       return;
@@ -748,7 +736,6 @@ const App = () => {
     return null;
   };
 
- 
   const handleReorderFields = (activeId, overId, overData) => {
     setFields((prevFields) => {
       const newFields = [...prevFields];
@@ -758,17 +745,14 @@ const App = () => {
 
       if (!activeField || !overField) return prevFields;
 
-  
       removeFieldById(newFields, activeId);
 
-     
       insertFieldAfter(newFields, activeField, overId, overData);
 
       return newFields;
     });
   };
 
- 
   const removeFieldById = (fieldsArray, id) => {
     for (let i = 0; i < fieldsArray.length; i++) {
       if (fieldsArray[i].id === id) {
@@ -782,9 +766,7 @@ const App = () => {
     return null;
   };
 
-
   const insertFieldAfter = (fieldsArray, fieldToInsert, afterId, overData) => {
-
     if (overData?.parentId) {
       const parent = findFieldById(fieldsArray, overData.parentId);
       if (parent && (parent.isLayout || parent.type === "array")) {
@@ -799,7 +781,6 @@ const App = () => {
       }
     }
 
-   
     for (let i = 0; i < fieldsArray.length; i++) {
       if (fieldsArray[i].id === afterId) {
         fieldsArray.splice(i + 1, 0, fieldToInsert);
@@ -831,7 +812,6 @@ const App = () => {
       return closestCenter(args);
     }
 
-   
     const dropZones = Array.from(droppableContainers.values()).filter(
       (container) => container.id.includes("drop-")
     );
@@ -847,10 +827,8 @@ const App = () => {
       }
     }
 
-
     return closestCenter(args);
   };
-
 
   const getAllFieldIds = (fieldsArray) => {
     const ids = [];
@@ -862,7 +840,6 @@ const App = () => {
     });
     return ids;
   };
-
 
   const mapSchemaPropertyToFieldType = useCallback((property) => {
     const { type, enum: enumValues, format } = property;
@@ -924,11 +901,9 @@ const App = () => {
     }
   }, []);
 
- 
   const convertSchemaToFieldsHelper = (schema, uischema = null) => {
     if (!schema || !schema.properties) return [];
 
- 
     if (uischema && uischema.elements) {
       const fields = [];
       const processedKeys = new Set();
@@ -938,7 +913,6 @@ const App = () => {
           fieldCounter.current += 1;
           const groupId = fieldCounter.current;
 
-   
           const groupField = {
             id: `field_${groupId}`,
             type: "group",
@@ -950,7 +924,6 @@ const App = () => {
             children: [],
             parentId: null,
           };
-
 
           element.elements.forEach((control) => {
             if (control.type === "Control" && control.scope) {
@@ -1107,236 +1080,15 @@ const App = () => {
     return fields;
   };
 
-
   const convertSchemaToFields = useCallback((schema, uischema = null) => {
     return convertSchemaToFieldsHelper(schema, uischema);
   }, []);
- 
 
   // Schema loading functionality
   const handleLoadSchemaFromPalette = useCallback(
     (schemaId) => {
       // Simple sample schemas for the dropdown
       const sampleSchemas = [
-        {
-          id: "user-registration",
-          name: "User Registration Form",
-          description:
-            "Complete user registration with personal details, contact information, and preferences",
-          tags: ["Registration", "User", "Contact"],
-          schema: {
-            type: "object",
-            properties: {
-              firstName: {
-                type: "string",
-                title: "First Name",
-                minLength: 2,
-              },
-              lastName: {
-                type: "string",
-                title: "Last Name",
-                minLength: 2,
-              },
-              email: {
-                type: "string",
-                format: "email",
-                title: "Email Address",
-              },
-              phone: {
-                type: "string",
-                title: "Phone Number",
-                pattern: "^[+]?[0-9\\s\\-\\(\\)]{10,}$",
-              },
-              age: {
-                type: "number",
-                title: "Age",
-                minimum: 13,
-                maximum: 120,
-              },
-              country: {
-                type: "string",
-                title: "Country",
-                enum: ["USA", "Canada", "UK", "Germany", "France", "Other"],
-              },
-              newsletter: {
-                type: "boolean",
-                title: "Subscribe to Newsletter",
-              },
-              bio: {
-                type: "string",
-                title: "Bio",
-                maxLength: 500,
-              },
-            },
-            required: ["firstName", "lastName", "email"],
-          },
-        },
-        {
-          id: "job-application",
-          name: "Job Application Form",
-          description:
-            "Professional job application with experience, skills, and document uploads",
-          tags: ["Job", "Application", "Professional"],
-          schema: {
-            type: "object",
-            properties: {
-              fullName: {
-                type: "string",
-                title: "Full Name",
-              },
-              email: {
-                type: "string",
-                format: "email",
-                title: "Email",
-              },
-              position: {
-                type: "string",
-                title: "Position Applied For",
-                enum: [
-                  "Software Engineer",
-                  "Product Manager",
-                  "Designer",
-                  "Data Scientist",
-                  "DevOps Engineer",
-                ],
-              },
-              experience: {
-                type: "string",
-                title: "Years of Experience",
-                enum: ["0-1", "2-3", "4-6", "7-10", "10+"],
-              },
-              skills: {
-                type: "string",
-                title: "Technical Skills",
-                maxLength: 1000,
-              },
-              coverLetter: {
-                type: "string",
-                title: "Cover Letter",
-                maxLength: 2000,
-              },
-              relocate: {
-                type: "boolean",
-                title: "Willing to Relocate",
-              },
-              salary: {
-                type: "number",
-                title: "Expected Salary (USD)",
-                minimum: 30000,
-              },
-            },
-            required: ["fullName", "email", "position", "experience"],
-          },
-        },
-        {
-          id: "event-registration",
-          name: "Event Registration",
-          description:
-            "Event registration form with attendance preferences and dietary requirements",
-          tags: ["Event", "Registration", "Conference"],
-          schema: {
-            type: "object",
-            properties: {
-              attendeeName: {
-                type: "string",
-                title: "Attendee Name",
-              },
-              company: {
-                type: "string",
-                title: "Company/Organization",
-              },
-              email: {
-                type: "string",
-                format: "email",
-                title: "Email",
-              },
-              ticketType: {
-                type: "string",
-                title: "Ticket Type",
-                enum: ["Standard", "VIP", "Student", "Speaker"],
-              },
-              sessions: {
-                type: "string",
-                title: "Interested Sessions",
-                enum: [
-                  "Technical Track",
-                  "Business Track",
-                  "Design Track",
-                  "All Sessions",
-                ],
-              },
-              dietaryRequirements: {
-                type: "string",
-                title: "Dietary Requirements",
-                enum: ["None", "Vegetarian", "Vegan", "Gluten-Free", "Other"],
-              },
-              networking: {
-                type: "boolean",
-                title: "Join Networking Event",
-              },
-              accommodation: {
-                type: "boolean",
-                title: "Need Accommodation Assistance",
-              },
-            },
-            required: ["attendeeName", "email", "ticketType"],
-          },
-        },
-        {
-          id: "survey-feedback",
-          name: "Customer Feedback Survey",
-          description:
-            "Customer satisfaction survey with ratings and feedback collection",
-          tags: ["Survey", "Feedback", "Rating"],
-          schema: {
-            type: "object",
-            properties: {
-              customerName: {
-                type: "string",
-                title: "Customer Name (Optional)",
-              },
-              email: {
-                type: "string",
-                format: "email",
-                title: "Email (Optional)",
-              },
-              overallRating: {
-                type: "number",
-                title: "Overall Satisfaction",
-                minimum: 1,
-                maximum: 5,
-                enum: [1, 2, 3, 4, 5],
-                enumNames: ["Very Poor", "Poor", "Fair", "Good", "Excellent"],
-              },
-              productQuality: {
-                type: "number",
-                title: "Product Quality Rating",
-                minimum: 1,
-                maximum: 5,
-              },
-              customerService: {
-                type: "number",
-                title: "Customer Service Rating",
-                minimum: 1,
-                maximum: 5,
-              },
-              recommend: {
-                type: "boolean",
-                title: "Would you recommend us to others?",
-              },
-              improvements: {
-                type: "string",
-                title: "Suggestions for Improvement",
-                maxLength: 1000,
-              },
-              futureContact: {
-                type: "boolean",
-                title: "May we contact you for follow-up?",
-              },
-            },
-            required: ["overallRating"],
-          },
-        },
         {
           id: "product-order",
           name: "Product Order Form",
@@ -2055,39 +1807,6 @@ const App = () => {
             ],
           },
         },
-        {
-          id: "test-with-icons",
-          name: "Test Form with Icons",
-          description: "Test schema with group icons",
-          tags: ["Test"],
-          schema: {
-            type: "object",
-            properties: {
-              name: { type: "string", title: "Name" },
-              email: { type: "string", title: "Email" },
-              age: { type: "number", title: "Age" },
-            },
-            required: ["name", "email"],
-          },
-          uischema: {
-            type: "VerticalLayout",
-            elements: [
-              {
-                type: "Group",
-                label: "Personal Info",
-                elements: [
-                  { type: "Control", scope: "#/properties/name" },
-                  { type: "Control", scope: "#/properties/email" },
-                ],
-              },
-              {
-                type: "Group",
-                label: "Additional Info",
-                elements: [{ type: "Control", scope: "#/properties/age" }],
-              },
-            ],
-          },
-        },
       ];
 
       const selectedSchema = sampleSchemas.find((s) => s.id === schemaId);
@@ -2156,7 +1875,6 @@ const App = () => {
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <IconHammer size={28} />
                 <Typography
                   variant="h5"
                   sx={{

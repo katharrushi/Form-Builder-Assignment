@@ -29,7 +29,7 @@ const CommonHeader = ({
             color: "primary.contrastText",
             p: 1,
             borderRadius: 2,
-            backgroundColor: "primary.main",
+            backgroundColor: "primary.main", 
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

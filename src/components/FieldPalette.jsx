@@ -99,41 +99,17 @@ const FieldPalette = ({ onFieldSelect, onLoadSchema }) => {
   const [selectedSchema, setSelectedSchema] = useState("");
 
   const sampleSchemas = [
-    {
-      id: "user-registration",
-      name: "User Registration Form",
-      description: "Complete user registration with personal details",
-    },
-    {
-      id: "job-application",
-      name: "Job Application Form",
-      description: "Professional job application form",
-    },
-    {
-      id: "event-registration",
-      name: "Event Registration",
-      description: "Event registration with preferences",
-    },
-    {
-      id: "survey-feedback",
-      name: "Customer Feedback Survey",
-      description: "Customer satisfaction survey",
-    },
-    {
-      id: "product-order",
-      name: "Product Order Form",
-      description: "E-commerce order form",
-    },
-    {
+  {
       id: "organization-onboarding",
       name: "Organization Onboarding",
       description: "Comprehensive onboarding form",
     },
     {
-      id: "test-with-icons",
-      name: "Test Form with Icons",
-      description: "Test schema with group icons",
-    },
+      id: "product-order",
+      name: "Product Order Form",
+      description: "E-commerce order form",
+    }
+  
   ];
 
   const handleSchemaChange = (event) => {
